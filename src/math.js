@@ -31,11 +31,11 @@ export function updateCameraPosition(
     angleV,
     angleH,
     camera,
-    fov,
     innerWidth,
     innerHeight,
     THREE
 ) {
+    const fov = camera.fov
     const scale = d3_transform.k
     const newRadius = getRadiusFromScale(scale, fov, innerHeight)
     const cameraAngle = polarToCartesian(angleV, angleH, newRadius)

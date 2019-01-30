@@ -1,9 +1,9 @@
 {
-    "name": "three-game-camera",
+    "name": "three-iso-game-camera",
     "version": "1.0.0",
-    "main": "dist/three-game-camera.cjs.js",
-    "module": "dist/three-game-camera.esm.js",
-    "browser": "dist/three-game-camera.umd.js",
+    "main": "dist/three-iso-game-camera.cjs.js",
+    "module": "dist/three-iso-game-camera.esm.js",
+    "browser": "dist/three-iso-game-camera.umd.js",
     "dependencies": {},
     "devDependencies": {
         "babel-core": "^6.26.3",

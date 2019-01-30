@@ -1,10 +1,10 @@
-export function polarToCartesian(angleV, angleH, radius) {
+function polarToCartesian(angleV, angleH, radius) {
     const phi = ((90 - angleV) * Math.PI) / 180
-    const theta = ((angleH - 90) * Math.PI) / 180
+    const theta = ((90 - angleH) * Math.PI) / 180
     return {
-        x: -radius * Math.sin(phi) * Math.sin(theta),
+        x: radius * Math.sin(phi) * Math.sin(theta),
         y: radius * Math.cos(phi),
-        z: -radius * Math.sin(phi) * Math.cos(theta)
+        z: radius * Math.sin(phi) * Math.cos(theta)
     }
 }
 

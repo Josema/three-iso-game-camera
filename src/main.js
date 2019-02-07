@@ -65,9 +65,14 @@ export default function ThreeIsoGameCamera({
     window.addEventListener('resize', this.onWindowResize)
 }
 
-ThreeIsoGameCamera.prototype.startRender = function(scene) {
+ThreeIsoGameCamera.prototype.startRender = function(...scenes) {
     const animate = () => {
-        this.renderer.render(scene, this.camera)
+        // this.renderer.autoClear = true
+        scenes.forEach(scene => {
+            this.renderer.render(scene, this.camera)
+            this.renderer.clearDepth()
+            this.renderer.autoClear = false
+        })
         requestAnimationFrame(animate)
     }
     animate()

@@ -9,7 +9,8 @@ export default function ThreeIsoGameCamera({
     angleH = 45, // horizontal angle
     distance = 100, // or radius
     distanceMax = Infinity,
-    distanceMin = 0
+    distanceMin = 0,
+    onChange
 }) {
     // Setup
     this.THREE = THREE
@@ -20,6 +21,7 @@ export default function ThreeIsoGameCamera({
     this.innerHeight = window.innerHeight
     this.camera = camera
     this.renderer = renderer
+    this.onChange = onChange
     this.renderer.setPixelRatio(window.devicePixelRatio)
     this.renderer.setSize(this.innerWidth, this.innerHeight)
 
@@ -34,16 +36,23 @@ export default function ThreeIsoGameCamera({
             getScaleFromRadius(distanceMin, this.camera.fov, this.innerHeight)
         ])
         .on('zoom', () => {
-            this.d3Transform = d3.event.transform
-            return updateCameraPosition(
-                this.d3Transform,
-                this.angleV,
-                this.angleH,
-                this.camera,
-                this.innerWidth,
-                this.innerHeight,
-                THREE
-            )
+            const event = d3.event
+            this.d3Transform = event.transform
+            if (
+                event.sourceEvent === null ||
+                this.onChange === undefined ||
+                this.onChange(event)
+            ) {
+                updateCameraPosition(
+                    this.d3Transform,
+                    this.angleV,
+                    this.angleH,
+                    this.camera,
+                    this.innerWidth,
+                    this.innerHeight,
+                    THREE
+                )
+            }
         })
 
     const view = d3.select(this.renderer.domElement)

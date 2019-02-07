@@ -60,22 +60,8 @@ export default function ThreeIsoGameCamera({
     zoom.transform(view, initialTransform)
 
     // binding
-    this.startRender = this.startRender.bind(this)
     this.onWindowResize = this.onWindowResize.bind(this)
     window.addEventListener('resize', this.onWindowResize)
-}
-
-ThreeIsoGameCamera.prototype.startRender = function(...scenes) {
-    const animate = () => {
-        // this.renderer.autoClear = true
-        scenes.forEach(scene => {
-            this.renderer.render(scene, this.camera)
-            this.renderer.clearDepth()
-            this.renderer.autoClear = false
-        })
-        requestAnimationFrame(animate)
-    }
-    animate()
 }
 
 ThreeIsoGameCamera.prototype.onWindowResize = function() {

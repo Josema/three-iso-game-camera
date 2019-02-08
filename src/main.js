@@ -1,29 +1,34 @@
-import { getScaleFromRadius, updateCameraPosition } from './math'
+import {
+    getScaleFromRadius,
+    getRadiusFromScale,
+    polarToCartesian,
+    panCamera
+} from './math'
 
 export default function ThreeIsoGameCamera({
     camera,
-    renderer,
-    THREE,
-    d3,
+    domElement,
     angleV = 45, // vertical angle
     angleH = 45, // horizontal angle
     distance = 100, // or radius
     distanceMax = Infinity,
     distanceMin = 0,
-    onChange
+    canvasWidth,
+    canvasHeight,
+    onChange,
+    THREE,
+    d3
 }) {
     // Setup
     this.THREE = THREE
     this.angleV = angleV
     this.angleH = angleH
     this.distance = distance
-    this.innerWidth = window.innerWidth
-    this.innerHeight = window.innerHeight
+    this.canvasWidth = canvasWidth || window.innerWidth
+    this.canvasHeight = canvasHeight || window.innerHeight
     this.camera = camera
-    this.renderer = renderer
+    this.domElement = domElement
     this.onChange = onChange
-    this.renderer.setPixelRatio(window.devicePixelRatio)
-    this.renderer.setSize(this.innerWidth, this.innerHeight)
 
     //
     //
@@ -32,8 +37,8 @@ export default function ThreeIsoGameCamera({
     const zoom = d3
         .zoom()
         .scaleExtent([
-            getScaleFromRadius(distanceMax, this.camera.fov, this.innerHeight),
-            getScaleFromRadius(distanceMin, this.camera.fov, this.innerHeight)
+            getScaleFromRadius(distanceMax, this.camera.fov, this.canvasHeight),
+            getScaleFromRadius(distanceMin, this.camera.fov, this.canvasHeight)
         ])
         .on('zoom', () => {
             const event = d3.event
@@ -43,51 +48,44 @@ export default function ThreeIsoGameCamera({
                 this.onChange === undefined ||
                 this.onChange(event)
             ) {
-                updateCameraPosition(
-                    this.d3Transform,
-                    this.angleV,
-                    this.angleH,
-                    this.camera,
-                    this.innerWidth,
-                    this.innerHeight,
-                    THREE
-                )
+                this.updateCameraPosition()
             }
         })
 
-    const view = d3.select(this.renderer.domElement)
+    const view = d3.select(domElement)
     view.call(zoom)
     const initialScale = getScaleFromRadius(
         this.distance,
         this.camera.fov,
-        this.innerHeight
+        this.canvasHeight
     )
     const initialTransform = d3.zoomIdentity
-        .translate(this.innerWidth / 2, this.innerHeight / 2)
+        .translate(this.canvasWidth / 2, this.canvasHeight / 2)
         .scale(initialScale)
 
     zoom.transform(view, initialTransform)
-
-    // binding
-    this.onWindowResize = this.onWindowResize.bind(this)
-    window.addEventListener('resize', this.onWindowResize)
 }
 
-ThreeIsoGameCamera.prototype.onWindowResize = function() {
-    const innerWidth = window.innerWidth
-    const innerHeight = window.innerHeight
-    this.innerWidth = innerWidth
-    this.innerHeight = innerHeight
-    updateCameraPosition(
-        this.d3Transform,
-        this.angleV,
-        this.angleH,
-        this.camera,
-        this.innerWidth,
-        this.innerHeight,
+ThreeIsoGameCamera.prototype.getCameraPosition = function() {
+    const fov = this.camera.fov
+    const scale = this.d3Transform.k
+    const newRadius = getRadiusFromScale(scale, fov, this.canvasHeight)
+    const cameraAngle = polarToCartesian(this.angleV, this.angleH, newRadius)
+    const x = (this.d3Transform.x - this.canvasWidth / 2) / scale
+    const y = (this.d3Transform.y - this.canvasHeight / 2) / scale
+    const cameraPaned = panCamera(
+        new this.THREE.Vector3(cameraAngle.x, cameraAngle.y, cameraAngle.z),
+        new this.THREE.Vector3(0, 0, 0),
+        x,
+        y,
         this.THREE
     )
-    this.renderer.setSize(innerWidth, innerHeight)
-    this.camera.aspect = innerWidth / innerHeight
-    this.camera.updateProjectionMatrix()
+    return cameraPaned
+}
+
+ThreeIsoGameCamera.prototype.updateCameraPosition = function() {
+    const cameraPaned = this.getCameraPosition()
+    const position = cameraPaned.position
+    this.camera.position.set(position.x, position.y, position.z)
+    this.camera.lookAt(cameraPaned.lookAt)
 }

@@ -1,4 +1,4 @@
-function polarToCartesian(angleV, angleH, radius) {
+export function polarToCartesian(angleV, angleH, radius) {
     const phi = ((90 - angleV) * Math.PI) / 180
     const theta = ((90 - angleH) * Math.PI) / 180
     return {
@@ -24,33 +24,6 @@ export function getRadiusFromScale(scale, fov, innerHeight) {
     const camera_radius_position =
         scale_height / (2 * Math.tan(half_fov_radians))
     return camera_radius_position
-}
-
-export function updateCameraPosition(
-    d3_transform,
-    angleV,
-    angleH,
-    camera,
-    innerWidth,
-    innerHeight,
-    THREE
-) {
-    const fov = camera.fov
-    const scale = d3_transform.k
-    const newRadius = getRadiusFromScale(scale, fov, innerHeight)
-    const cameraAngle = polarToCartesian(angleV, angleH, newRadius)
-    const x = (d3_transform.x - innerWidth / 2) / scale
-    const y = (d3_transform.y - innerHeight / 2) / scale
-    const cameraPaned = panCamera(
-        new THREE.Vector3(cameraAngle.x, cameraAngle.y, cameraAngle.z),
-        new THREE.Vector3(0, 0, 0),
-        x,
-        y,
-        THREE
-    )
-    const position = cameraPaned.position
-    camera.position.set(position.x, position.y, position.z)
-    camera.lookAt(cameraPaned.lookAt)
 }
 
 export function panCamera(position, lookAt, x, y, THREE) {

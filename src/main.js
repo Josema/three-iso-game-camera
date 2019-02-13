@@ -13,22 +13,22 @@ export default function ThreeIsoGameCamera({
     distance = 100, // or radius
     distanceMax = Infinity,
     distanceMin = 0,
-    canvasWidth,
-    canvasHeight,
+    canvasWidth = window.innerWidth,
+    canvasHeight = window.innerHeight,
     onChange,
     THREE,
     d3
 }) {
     // Setup
-    this.THREE = THREE
+    this.camera = camera
+    this.domElement = domElement
     this.angleV = angleV
     this.angleH = angleH
     this.distance = distance
-    this.canvasWidth = canvasWidth || window.innerWidth
-    this.canvasHeight = canvasHeight || window.innerHeight
-    this.camera = camera
-    this.domElement = domElement
+    this.canvasWidth = canvasWidth
+    this.canvasHeight = canvasHeight
     this.onChange = onChange
+    this.THREE = THREE
 
     //
     //
@@ -44,9 +44,9 @@ export default function ThreeIsoGameCamera({
             const event = d3.event
             this.d3Transform = event.transform
             if (
-                event.sourceEvent === null ||
                 this.onChange === undefined ||
-                this.onChange(event)
+                this.onChange(event) ||
+                event.sourceEvent === null
             ) {
                 this.updateCameraPosition()
             }

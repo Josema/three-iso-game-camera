@@ -55,7 +55,7 @@ export default function ThreeIsoGameCamera({
                 d3.event.sourceEvent &&
                 this.d3Transform !== d3.event.transform
             ) {
-                this.zoom.transform(view, this.d3Transform)
+                this.zoom.transform(this.view, this.d3Transform)
             }
         })
         .on('zoom', () => {
@@ -70,8 +70,8 @@ export default function ThreeIsoGameCamera({
             }
         })
 
-    const view = d3.select(domElement)
-    view.call(this.zoom).on('dblclick.zoom', null)
+    this.view = d3.select(domElement)
+    this.view.call(this.zoom) //.on('dblclick.zoom', null)
     const initialScale = getScaleFromRadius(
         this.distance,
         this.camera.fov,
@@ -81,7 +81,7 @@ export default function ThreeIsoGameCamera({
         .translate(this.canvasWidth / 2, this.canvasHeight / 2)
         .scale(initialScale)
 
-    this.zoom.transform(view, initialTransform)
+    this.zoom.transform(this.view, initialTransform)
 }
 
 ThreeIsoGameCamera.prototype.getCameraPosition = function() {

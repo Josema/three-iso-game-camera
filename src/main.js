@@ -15,7 +15,9 @@ export default function ThreeIsoGameCamera({
     distanceMin = 0,
     canvasWidth = window.innerWidth,
     canvasHeight = window.innerHeight,
+    onStart,
     onChange,
+    onEnd,
     THREE,
     d3
 }) {
@@ -27,19 +29,27 @@ export default function ThreeIsoGameCamera({
     this.distance = distance
     this.canvasWidth = canvasWidth
     this.canvasHeight = canvasHeight
+    this.onStart = onStart
     this.onChange = onChange
+    this.onEnd = onEnd
     this.THREE = THREE
 
     //
     //
     //
     // d3
-    const zoom = d3
+    this.zoom = d3
         .zoom()
         .scaleExtent([
             getScaleFromRadius(distanceMax, this.camera.fov, this.canvasHeight),
             getScaleFromRadius(distanceMin, this.camera.fov, this.canvasHeight)
         ])
+        .on('start', e => {
+            if (typeof this.onStart == 'function') this.onStart(d3.event)
+        })
+        .on('end', e => {
+            if (typeof this.onEnd == 'function') this.onEnd(d3.event)
+        })
         .on('zoom', () => {
             const event = d3.event
             this.d3Transform = event.transform
@@ -53,7 +63,7 @@ export default function ThreeIsoGameCamera({
         })
 
     const view = d3.select(domElement)
-    view.call(zoom)
+    view.call(this.zoom).on('dblclick.zoom', null)
     const initialScale = getScaleFromRadius(
         this.distance,
         this.camera.fov,
@@ -63,7 +73,7 @@ export default function ThreeIsoGameCamera({
         .translate(this.canvasWidth / 2, this.canvasHeight / 2)
         .scale(initialScale)
 
-    zoom.transform(view, initialTransform)
+    this.zoom.transform(view, initialTransform)
 }
 
 ThreeIsoGameCamera.prototype.getCameraPosition = function() {

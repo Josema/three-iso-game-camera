@@ -49,15 +49,23 @@ export default function ThreeIsoGameCamera({
         })
         .on('end', e => {
             if (typeof this.onEnd == 'function') this.onEnd(d3.event)
+            // If d3Transform is not the current because onChange we returned false
+            // then we have to update the last transform
+            if (
+                d3.event.sourceEvent &&
+                this.d3Transform !== d3.event.transform
+            ) {
+                this.zoom.transform(view, this.d3Transform)
+            }
         })
         .on('zoom', () => {
             const event = d3.event
-            this.d3Transform = event.transform
             if (
                 this.onChange === undefined ||
                 this.onChange(event) ||
                 event.sourceEvent === null
             ) {
+                this.d3Transform = event.transform
                 this.updateCameraPosition()
             }
         })

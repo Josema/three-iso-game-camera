@@ -1,5 +1,5 @@
 {
-    "name": "three-iso-game-camera",
+    "name": "@ocio/three-iso-game-camera",
     "version": "1.0.0",
     "main": "dist/three-iso-game-camera.cjs.js",
     "module": "dist/three-iso-game-camera.esm.js",

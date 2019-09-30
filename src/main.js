@@ -6,20 +6,20 @@ import {
 } from './math'
 
 function ThreeIsoGameCamera({
+    THREE,
+    d3,
     camera,
     domElement,
+    canvasWidth,
+    canvasHeight,
     angleV = 45, // vertical angle
     angleH = 45, // horizontal angle
     distance = 100, // or radius
     distanceMax = Infinity,
     distanceMin = 0,
-    canvasWidth = window.innerWidth,
-    canvasHeight = window.innerHeight,
     onStart,
     onChange,
-    onEnd,
-    THREE,
-    d3
+    onEnd
 }) {
     //
     //
@@ -118,6 +118,8 @@ function ThreeIsoGameCamera({
         .scale(initialScale)
 
     tigc.zoom.transform(tigc.view, initialTransform)
+
+    return tigc
 }
 
 export default ThreeIsoGameCamera

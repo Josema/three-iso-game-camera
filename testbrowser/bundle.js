@@ -48,8 +48,12 @@
     }
 
     function ThreeIsoGameCamera(_ref) {
-        var camera = _ref.camera,
+        var THREE = _ref.THREE,
+            d3 = _ref.d3,
+            camera = _ref.camera,
             domElement = _ref.domElement,
+            canvasWidth = _ref.canvasWidth,
+            canvasHeight = _ref.canvasHeight,
             _ref$angleV = _ref.angleV,
             angleV = _ref$angleV === undefined ? 45 : _ref$angleV,
             _ref$angleH = _ref.angleH,
@@ -60,18 +64,9 @@
             distanceMax = _ref$distanceMax === undefined ? Infinity : _ref$distanceMax,
             _ref$distanceMin = _ref.distanceMin,
             distanceMin = _ref$distanceMin === undefined ? 0 : _ref$distanceMin,
-            _ref$canvasWidth = _ref.canvasWidth,
-            canvasWidth = _ref$canvasWidth === undefined ? window.innerWidth : _ref$canvasWidth,
-            _ref$canvasHeight = _ref.canvasHeight,
-            canvasHeight = _ref$canvasHeight === undefined ? window.innerHeight : _ref$canvasHeight,
             onStart = _ref.onStart,
-            _ref$onChange = _ref.onChange,
-            onChange = _ref$onChange === undefined ? function () {
-            return true;
-        } : _ref$onChange,
-            onEnd = _ref.onEnd,
-            THREE = _ref.THREE,
-            d3 = _ref.d3;
+            onChange = _ref.onChange,
+            onEnd = _ref.onEnd;
 
         //
         //
@@ -90,6 +85,9 @@
         tigc.onEnd = onEnd;
         tigc.THREE = THREE;
 
+        //
+        //
+        //
         // Methods
         tigc.getCameraPosition = function () {
             var fov = tigc.camera.fov;
@@ -136,6 +134,8 @@
         var initialTransform = d3.zoomIdentity.translate(tigc.canvasWidth / 2, tigc.canvasHeight / 2).scale(initialScale);
 
         tigc.zoom.transform(tigc.view, initialTransform);
+
+        return tigc;
     }
 
     return ThreeIsoGameCamera;

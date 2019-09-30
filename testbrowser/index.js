@@ -3,9 +3,9 @@ const canvasWidth = window.innerWidth
 const canvasHeight = window.innerHeight
 const scene = new THREE.Scene()
 const renderer = new THREE.WebGLRenderer({
-    canvas
-    // alpha: true,
-    // antialias: true
+    canvas,
+    alpha: true,
+    antialias: true
 })
 const camera = new THREE.PerspectiveCamera(
     10, // fov
@@ -13,19 +13,18 @@ const camera = new THREE.PerspectiveCamera(
     1, // near
     99999 // far
 )
-const distance = 1000
-isoCamera = ThreeIsoGameCamera({
-    domElement: canvas,
-    canvasWidth,
-    canvasHeight,
+const isoCamera = ThreeIsoGameCamera({
     THREE,
     d3,
-    camera
+    camera,
+    domElement: canvas,
+    canvasWidth,
+    canvasHeight
     // angleH: 45,
     // angleV: 35,
-    // distance,
-    // distanceMin: distance,
-    // distanceMax: distance * 3,
+    // distance: 1000,
+    // distanceMin: 1000,
+    // distanceMax: 1000 * 3,
     // onStart,
     // onEnd,
     // onChange
@@ -43,8 +42,8 @@ animate()
 window.addEventListener('resize', () => {
     const canvasWidth = window.innerWidth
     const canvasHeight = window.innerHeight
-    // isoCamera.canvasWidth = canvasWidth
-    // isoCamera.canvasHeight = canvasHeight
+    isoCamera.canvasWidth = canvasWidth
+    isoCamera.canvasHeight = canvasHeight
     isoCamera.updateCameraPosition()
     renderer.setSize(canvasWidth, canvasHeight)
     camera.aspect = canvasWidth / canvasHeight

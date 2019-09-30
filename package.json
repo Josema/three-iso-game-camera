@@ -1,6 +1,6 @@
 {
     "name": "@ocio/three-iso-game-camera",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "main": "dist/three-iso-game-camera.cjs.js",
     "module": "dist/three-iso-game-camera.esm.js",
     "browser": "dist/three-iso-game-camera.umd.js",
@@ -17,6 +17,7 @@
     "scripts": {
         "build": "rollup -c",
         "dev": "rollup -c -w",
-        "test": "node test/test.js"
+        "test": "node test/test.js",
+        "browser": "browserify testbrowser/api.js -o testbrowser/bundle.js"
     }
 }

@@ -17,6 +17,7 @@ function ThreeIsoGameCamera({
     distance = 100, // or radius
     distanceMax = Infinity,
     distanceMin = 0,
+    fixedY = false,
     onStart,
     onChange,
     onEnd
@@ -53,21 +54,27 @@ function ThreeIsoGameCamera({
         )
         const x = (tigc.d3Transform.x - tigc.canvasWidth / 2) / scale
         const y = (tigc.d3Transform.y - tigc.canvasHeight / 2) / scale
+
         const cameraPaned = panCamera(
-            new tigc.THREE.Vector3(cameraAngle.x, cameraAngle.y, cameraAngle.z),
-            new tigc.THREE.Vector3(0, 0, 0),
+            new THREE.Vector3(cameraAngle.x, cameraAngle.y, cameraAngle.z),
+            new THREE.Vector3(0, 0, 0),
             x,
             y,
-            tigc.THREE
+            THREE
         )
         return cameraPaned
     }
 
     tigc.updateCameraPosition = function() {
-        const cameraPaned = tigc.getCameraPosition()
-        const position = cameraPaned.position
+        const { position, lookAt } = tigc.getCameraPosition()
+        // if (fixedY) {
+        //     const lookAty = lookAt.y
+        //     lookAt.y = 0
+        //     position.y -= lookAty
+        //     console.log(lookAt, position)
+        // }
         tigc.camera.position.set(position.x, position.y, position.z)
-        tigc.camera.lookAt(cameraPaned.lookAt)
+        tigc.camera.lookAt(lookAt)
     }
 
     //
@@ -81,10 +88,14 @@ function ThreeIsoGameCamera({
             getScaleFromRadius(distanceMin, tigc.camera.fov, tigc.canvasHeight)
         ])
         .on('start', e => {
-            if (typeof tigc.onStart == 'function') tigc.onStart(d3.event)
+            if (typeof tigc.onStart == 'function') {
+                tigc.onStart(d3.event)
+            }
         })
         .on('end', e => {
-            if (typeof tigc.onEnd == 'function') tigc.onEnd(d3.event)
+            if (typeof tigc.onEnd == 'function') {
+                tigc.onEnd(d3.event)
+            }
             // If d3Transform is not the current because onChange we returned false
             // then we have to update the last transform
             if (

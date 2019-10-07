@@ -47,8 +47,6 @@ export function panCamera(position, lookAt, x, y, THREE) {
         .clone()
         .add(right)
         .add(up)
-    return {
-        position: position,
-        lookAt: lookAt
-    }
+
+    return { position, lookAt }
 }

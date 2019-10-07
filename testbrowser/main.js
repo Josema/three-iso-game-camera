@@ -19,21 +19,25 @@ const isoCamera = ThreeIsoGameCamera({
     camera,
     domElement: canvas,
     canvasWidth,
-    canvasHeight
-    // angleH: 45,
-    // angleV: 35,
-    // distance: 1000,
+    canvasHeight,
+    fixedY: true,
+    distance: 50,
     // distanceMin: 1000,
     // distanceMax: 1000 * 3,
     // onStart,
     // onEnd,
-    // onChange
+    onChange: e => {
+        return true
+    }
 })
 renderer.setClearColor('#000000')
 renderer.setPixelRatio(window.devicePixelRatio)
 renderer.setSize(canvasWidth, canvasHeight)
 
 function animate(time) {
+    isoCamera.angleV += 0.1
+    isoCamera.angleH += 0.1
+    isoCamera.updateCameraPosition()
     renderer.render(scene, camera)
     requestAnimationFrame(animate)
 }
@@ -51,7 +55,7 @@ window.addEventListener('resize', () => {
 })
 
 /// VISUAL ELEMENTS
-scene.add(new THREE.GridHelper(50, 100, 0xaaaaaa, 0x999999))
+scene.add(new THREE.GridHelper(300, 300, 0xaaaaaa, 0x999999))
 scene.add(new THREE.AxesHelper(5))
 scene.add(
     new THREE.Mesh(

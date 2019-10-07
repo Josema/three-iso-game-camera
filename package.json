@@ -18,6 +18,6 @@
         "build": "rollup -c",
         "dev": "rollup -c -w",
         "test": "node test/test.js",
-        "browser": "browserify testbrowser/api.js -o testbrowser/bundle.js"
+        "browser": "npm run build && browserify testbrowser/api.js -o testbrowser/bundle.js"
     }
 }

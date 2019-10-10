@@ -47,14 +47,19 @@ controls.addEventListener('change', e => {
     const tempH = Math.round(controls.getAzimuthalAngle() * RAD2DEG)
     const x = controls.target.x
     const z = controls.target.z
+    let shallWeUpdateAngle = false
+
     if (x < minX || x > maxX) {
         controls.target.setX(x < minX ? minX : maxX)
         camera.position.setX(positionX)
-        changePolarToCartesian({ angleV, angleH })
+        shallWeUpdateAngle = true
     }
     if (z < minZ || z > maxZ) {
         controls.target.setZ(z < minZ ? minZ : maxZ)
         camera.position.setZ(positionZ)
+        shallWeUpdateAngle = true
+    }
+    if (shallWeUpdateAngle) {
         changePolarToCartesian({ angleV, angleH })
     }
 

@@ -30,10 +30,12 @@ controls.touches = { ONE: THREE.TOUCH.PAN, TWO: THREE.TOUCH.DOLLY_PAN }
 // controls.maxDistance = 50
 // controls.maxPolarAngle = Math.PI / 2
 
+// Limits
 const maxX = 25
-const minX = -Infinity
+const minX = -25
 const maxZ = 25
 const minZ = -Infinity
+// State
 let angleV = 30
 let angleH = 45
 let positionX
@@ -44,21 +46,21 @@ controls.addEventListener('change', e => {
     const tempV = Math.round(controls.getPolarAngle() * RAD2DEG)
     const tempH = Math.round(controls.getAzimuthalAngle() * RAD2DEG)
     const x = controls.target.x
+    const z = controls.target.z
     if (x < minX || x > maxX) {
         controls.target.setX(x < minX ? minX : maxX)
         camera.position.setX(positionX)
         changePolarToCartesian({ angleV, angleH })
     }
-
-    // if (x < minX || x > maxX) {
-    //     controls.target.setX(x < minX ? minX : maxX)
-    //     camera.position.setX(positionX)
-    //     changePolarToCartesian({ angleV, angleH })
-    // }
+    if (z < minZ || z > maxZ) {
+        controls.target.setZ(z < minZ ? minZ : maxZ)
+        camera.position.setZ(positionZ)
+        changePolarToCartesian({ angleV, angleH })
+    }
 
     // Updating state
     positionX = camera.position.x
-    positionY = camera.position.y
+    positionZ = camera.position.z
     angleV = tempV
     angleH = tempH
 })

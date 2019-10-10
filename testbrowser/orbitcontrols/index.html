@@ -4,6 +4,14 @@
         <meta charset="UTF-8" />
         <title>polar to cartesians with orbit controls</title>
         <link rel="stylesheet" href="./style.css" />
+        <style>
+            #output {
+                background: white;
+                height: 20px;
+                position: absolute;
+                font-size: 20px;
+            }
+        </style>
     </head>
     <body>
         <!-- partial:index.partial.html -->
@@ -19,5 +27,6 @@ will be called for every animationFrame rendererd.
         <!-- partial -->
         <script src="https://cdn.rawgit.com/mrdoob/three.js/master/build/three.js"></script>
         <script src="./index.js"></script>
+        <div id="output"></div>
     </body>
 </html>

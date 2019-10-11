@@ -1,6 +1,8 @@
 const RAD2DEG = 180 / Math.PI
 const DEG2RAD = Math.PI / 180
 
+const angleV = 30
+const angleH = 45
 const distance = 100
 const fov = 10
 const near = 1
@@ -36,15 +38,13 @@ const minX = -25
 const maxZ = 25
 const minZ = -Infinity
 // State
-let angleV = 30
-let angleH = 45
 let positionX
 let positionZ
+let phi
+let theta
 
 changePolarToCartesian({ angleV, angleH, distance })
 controls.addEventListener('change', e => {
-    const tempV = Math.round(controls.getPolarAngle() * RAD2DEG)
-    const tempH = Math.round(controls.getAzimuthalAngle() * RAD2DEG)
     const x = controls.target.x
     const z = controls.target.z
     let shallWeUpdateAngle = false
@@ -59,15 +59,21 @@ controls.addEventListener('change', e => {
         camera.position.setZ(positionZ)
         shallWeUpdateAngle = true
     }
+
     if (shallWeUpdateAngle) {
-        changePolarToCartesian({ angleV, angleH })
+        const distance = camera.position.distanceTo(controls.target)
+        camera.position.set(
+            distance * Math.sin(phi) * Math.sin(theta) + controls.target.x,
+            distance * Math.cos(phi) + controls.target.y,
+            distance * Math.sin(phi) * Math.cos(theta) + controls.target.z
+        )
     }
 
     // Updating state
     positionX = camera.position.x
     positionZ = camera.position.z
-    angleV = tempV
-    angleH = tempH
+    phi = controls.getPolarAngle()
+    theta = controls.getAzimuthalAngle()
 })
 
 function targetTo(x, z, controls, camera) {

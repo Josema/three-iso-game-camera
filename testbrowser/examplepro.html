@@ -1,21 +1,14 @@
-/**
- * @author qiao / https://github.com/qiao
- * @author mrdoob / http://mrdoob.com
- * @author alteredq / http://alteredqualia.com/
- * @author WestLangley / http://github.com/WestLangley
- * @author erich666 / http://erichaines.com
- * @author ScieCode / http://github.com/sciecode
- */
 
-// This set of controls performs orbiting, dollying (zooming), and panning.
-// Unlike TrackballControls, it maintains the "up" direction object.up (+Y by default).
-//
-//    Orbit - left mouse / touch: one-finger move
-//    Zoom - middle mouse, or mousewheel / touch: two-finger spread or squish
-//    Pan - right mouse, or left mouse + ctrl/meta/shiftKey, or arrow keys / touch: two-finger move
+<style>
+body {
+    margin:0
+}</style>
+<body></body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/107/three.js"></script>
+<script>
 
-var minPan = new THREE.Vector3( - 25, - 25, - 25 );
-var maxPan = new THREE.Vector3( Infinity, 25, 25 );
+var minPan = new THREE.Vector3( - 2, - 2, - 2 );
+var maxPan = new THREE.Vector3( 2, 2, 2 );
 
 THREE.OrbitControls = function ( object, domElement ) {
 
@@ -195,8 +188,8 @@ THREE.OrbitControls = function ( object, domElement ) {
 				scope.target.add( panOffset );
 
 			}
-
-			// scope.target.clamp( minPan, maxPan );
+			
+			scope.target.clamp( minPan, maxPan );
 
 			offset.setFromSpherical( spherical );
 
@@ -794,7 +787,7 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 					case THREE.MOUSE.PAN:
 
-                        if ( event.ctrlKey || event.metaKey || event.shiftKey ) {
+						if ( event.ctrlKey || event.metaKey || event.shiftKey ) {
 
 							if ( scope.enableRotate === false ) return;
 
@@ -1173,3 +1166,45 @@ THREE.MapControls = function ( object, domElement ) {
 
 THREE.MapControls.prototype = Object.create( THREE.EventDispatcher.prototype );
 THREE.MapControls.prototype.constructor = THREE.MapControls;
+</script>
+<script>
+var camera, scene, renderer;
+var geometry, material, mesh;
+
+init();
+animate();
+
+function init() {
+
+    camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.01, 10 );
+    camera.position.z = 3;
+    camera.position.y = 3;
+    camera.position.x = 3;
+
+    scene = new THREE.Scene();
+
+    geometry = new THREE.BoxGeometry();
+    material = new THREE.MeshNormalMaterial();
+
+    mesh = new THREE.Mesh( geometry, material );
+    scene.add( mesh );
+
+    renderer = new THREE.WebGLRenderer( { antialias: true } );
+    renderer.setSize( window.innerWidth, window.innerHeight );
+    document.body.appendChild( renderer.domElement );
+		
+        var controls = new THREE.OrbitControls( camera, renderer.domElement );
+        controls.mouseButtons = { LEFT: THREE.MOUSE.PAN, RIGHT: THREE.MOUSE.ROTATE }
+controls.touches = { ONE: THREE.TOUCH.PAN, TWO: THREE.TOUCH.DOLLY_PAN }
+		
+		scene.add( new THREE.AxesHelper( 2 ) );
+
+}
+
+function animate() {
+
+    requestAnimationFrame( animate );
+    renderer.render( scene, camera );
+
+}
+</script>
